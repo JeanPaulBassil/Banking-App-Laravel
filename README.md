@@ -91,4 +91,4 @@ Instructions for deploying the application in a live environment will be provide
 ## Authors
 
 - **Jean-Paul Bassil** - [GitHub Profile](https://github.com/jeanpaulbassil)
-- **Peter Chahid** - [GitHub Profile](https://github.com/peterchahid)
+- **Peter Chahid** - [GitHub Profile](https://github.com/pdaaboul)
