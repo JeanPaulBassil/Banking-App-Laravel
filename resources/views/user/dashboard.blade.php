@@ -9,9 +9,20 @@
 </head>
 <body>
     <div class="container mt-5">
+        <!-- Success Message -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -40,11 +51,18 @@
                 @foreach($accounts as $account)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Account Number: {{ $account->id }} - Balance: {{ $account->balance }} - Currency: {{ $account->currency }} - Status: {{ $account->status }}
-                        <form action="{{ route('account.destroy', $account->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                        <div>
+                            <form action="{{ route('account.destroy', $account->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                            @if($account->status == 'Pending')
+                                <button type="button" class="btn btn-info btn-sm ml-2" disabled data-toggle="tooltip" data-placement="top" title="Account needs to be approved before conducting transfers">Fund Transfer</button>
+                            @else
+                                <a href="{{ route('fund.transfer', $account->id) }}" class="btn btn-info btn-sm ml-2">Fund Transfer</a>
+                            @endif
+                        </div>
                     </li>
                 @endforeach
             </ul>
@@ -54,13 +72,16 @@
 
         <div class="mb-3">
             <a href="{{ route('account.create') }}" class="btn btn-primary">Add New Account</a>
-            <!-- Fund Transfer Button -->
-            <a href="{{ route('fund.transfer') }}" class="btn btn-info ml-2">Fund Transfer</a>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>

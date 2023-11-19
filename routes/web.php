@@ -30,3 +30,4 @@ Route::get('/', [UserController::class, 'showDashboard'])->name('dashboard')->mi
 // Routes for account creation and management
 Route::get('account/create', [AccountController::class, 'showCreateAccount'])->name('account.create')->Middleware('auth');
 Route::post('account/create', [AccountController::class, 'createAccount'])->name('account.create')->middleware('auth');
+Route::delete('account/{account}', [AccountController::class,'destroy'])->name('account.destroy')->middleware('auth');
