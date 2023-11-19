@@ -5,6 +5,7 @@ use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,7 @@ Route::get('/', [UserController::class, 'showDashboard'])->name('dashboard')->mi
 Route::get('account/create', [AccountController::class, 'showCreateAccount'])->name('account.create')->Middleware('auth');
 Route::post('account/create', [AccountController::class, 'createAccount'])->name('account.create')->middleware('auth');
 Route::delete('account/{account}', [AccountController::class,'destroy'])->name('account.destroy')->middleware('auth');
+Route::get('account/{account}/transfer', [TransactionController::class, 'showTransferForm'])->name('fund.transfer')->middleware('auth');
+
+// Routes for Transactions and transfers
+Route::post('transaction/execute', [TransactionController::class, 'executeTransfer'])->name('transaction.execute')->middleware('auth');
