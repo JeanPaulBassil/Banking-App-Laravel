@@ -5,14 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard</title>
-    <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
+        <!-- Success Message -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
         <!-- Logout Button -->
-        <div class="d-flex justify-content-end">
-            <form method="POST" action="{{ route('logout') }}" class="mb-3">
+        <div class="d-flex justify-content-end mb-3">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-warning">Logout</button>
             </form>
@@ -27,17 +46,23 @@
         <h1 class="mb-4">Hello, {{ $username }}!</h1>
         <h2 class="mb-3">Your Bank Accounts</h2>
         
-        {{-- Display user's bank accounts --}}
         @if($accounts->isNotEmpty())
             <ul class="list-group mb-4">
                 @foreach($accounts as $account)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Account Number: {{ $account->number }} - Balance: {{ $account->balance }}
-                        <form action="{{ route('account.destroy', $account->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                        Account Number: {{ $account->id }} - Balance: {{ $account->balance }} - Currency: {{ $account->currency }} - Status: {{ $account->status }}
+                        <div>
+                            <form action="{{ route('account.destroy', $account->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                            @if($account->status == 'Pending')
+                                <button type="button" class="btn btn-info btn-sm ml-2" disabled data-toggle="tooltip" data-placement="top" title="Account needs to be approved before conducting transfers">Fund Transfer</button>
+                            @else
+                                <a href="{{ route('fund.transfer', $account->id) }}" class="btn btn-info btn-sm ml-2">Fund Transfer</a>
+                            @endif
+                        </div>
                     </li>
                 @endforeach
             </ul>
@@ -45,13 +70,18 @@
             <p class="text-secondary">You do not have any bank accounts yet.</p>
         @endif
 
-        {{-- Link to create a new bank account --}}
-        <a href="{{ route('account.create') }}" class="btn btn-primary">Add New Account</a>
+        <div class="mb-3">
+            <a href="{{ route('account.create') }}" class="btn btn-primary">Add New Account</a>
+        </div>
     </div>
 
-    <!-- Include Bootstrap JS and its dependencies (if you are using Bootstrap components that require JavaScript) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>
