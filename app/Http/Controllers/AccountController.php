@@ -1,22 +1,21 @@
 <?php
 
-
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\ClientOperation; // Import the ClientOperation model
 use Illuminate\Http\Request;
 
-
-class AccountController extends Controller{
-
-
+class AccountController extends Controller
+{
     /**
      * This Shows the Account creation View
      * 
      * @return \Illuminate\View\View
      */
-
-    public function showCreateAccount(){
+    public function showCreateAccount()
+    {
         return view('account.create');
     }
 
@@ -46,6 +45,13 @@ class AccountController extends Controller{
 
         $account->save();
 
+        // Log the account creation operation
+        ClientOperation::create([
+            'user_id' => $userId,
+            'operation_type' => 'Account Creation',
+            'operation_details' => 'Created a new account with currency ' . $request->currency
+        ]);
+
         return redirect()->route('dashboard')->with('success', 'Account created successfully and is pending approval.');
     }
 
@@ -55,20 +61,28 @@ class AccountController extends Controller{
      * @param int $accountId
      * @return \Illuminate\Http\RedirectResponse
      */
-
-    public function destroy($accountId){
+    public function destroy($accountId)
+    {
         $userId = session('user_id');
-        if(!$userId)
+        if (!$userId) {
             return redirect()->route('login')->withErrors(['email' => 'Not Authenticated']);
+        }
 
         $account = Account::where('id', $accountId)->where('user_id', $userId)->first();
 
-        if($account){
+        if ($account) {
             $account->delete();
-            return redirect()->route('dashboard')->with('success','Account Deleted Successfully');
-        } else
-            return redirect()->back()->withErrors(['error' => 'Account not found or access denied.']);
-    }
-    
 
+            // Log the account deletion operation
+            ClientOperation::create([
+                'user_id' => $userId,
+                'operation_type' => 'Account Deletion',
+                'operation_details' => 'Deleted account with ID: ' . $accountId
+            ]);
+
+            return redirect()->route('dashboard')->with('success', 'Account Deleted Successfully');
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Account not found or access denied.']);
+        }
+    }
 }
