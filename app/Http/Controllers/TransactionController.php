@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\ClientOperation; // Import the ClientOperation model
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -30,7 +31,6 @@ class TransactionController extends Controller
 
         return view('transaction.transfer', ['account' => $account]);
     }
-
 
     /**
      * Execute a fund transfer between accounts.
@@ -79,6 +79,13 @@ class TransactionController extends Controller
             $fromAccount->save();
             $toAccount->save();
 
+            // Log the fund transfer operation
+            ClientOperation::create([
+                'user_id' => $userId,
+                'operation_type' => 'Fund Transfer',
+                'operation_details' => 'Transferred ' . $request->amount . ' from account ' . $request->fromAccount . ' to account ' . $request->toAccount
+            ]);
+
             DB::commit();
             return redirect()->route('dashboard')->with('success', 'Transfer successful');
         } catch (\Exception $e) {
@@ -86,4 +93,6 @@ class TransactionController extends Controller
             return redirect()->route('dashboard')->withErrors(['error' => 'Transfer failed']);
         }
     }
+
+    // ... Other methods (if any) ...
 }

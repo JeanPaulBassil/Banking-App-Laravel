@@ -22,7 +22,7 @@ class CheckAgent
             return redirect('/login');
         }
 
-        $user = User::find('user_id');
+        $user = User::find($user_id);
         if($user && $user->role == 'agent')
             return $next($request);
         
