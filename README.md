@@ -22,7 +22,7 @@ Follow these steps to set up your development environment.
 #### Clone the Repository
 
 ```bash
-git clone https://github.com/jeanpaulbassil/banking-web-app.git
+git clone https://github.com/Pdaaboul/Laravel-banking-app.git
 cd banking-web-app
 ```
 
