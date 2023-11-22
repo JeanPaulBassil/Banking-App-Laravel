@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ClientOperation;
 use App\Models\User;
+use App\Models\Account;
 
 class AgentController extends Controller
 {
@@ -12,7 +13,7 @@ class AgentController extends Controller
     /**
      * Show the agent dashboard.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
     public function showDashboard()
     {
@@ -32,7 +33,7 @@ class AgentController extends Controller
     /**
      * Show all client operations.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
     public function showClientOperations()
     {
@@ -48,7 +49,7 @@ class AgentController extends Controller
     /**
      * Show all clients and their accounts.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
     public function showClientAccounts()
     {
@@ -60,4 +61,52 @@ class AgentController extends Controller
         $clients = User::where('role', 'client')->with('accounts')->get(); // Fetch all clients with their accounts, adjust as needed
         return view('agent.accounts', ['clients' => $clients]); // Pass data without using compact
     }
+
+    /**
+     * Lists all the Pending bank accounts
+     * 
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
+     */
+
+    public function showPendingAccounts()
+    {
+        $pendingAccounts = Account::where('status', 'Pending')->get();
+        return view('agent.pending-accounts', ['pendingAccounts' => $pendingAccounts]);
+    }
+
+    /**
+     * Accepts a pending account
+     * 
+     * @param int $accountId
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function acceptAccount($accountId)
+    {
+        $account = Account::find($accountId);
+        if ($account) {
+            $account->status = 'Active';
+            $account->save();
+            return redirect()->back()->with('success', 'Account accepted successfully.');
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Account not found.']);
+        }
+    }
+
+    /**
+     * Deletes a pending account
+     * 
+     * @param int $accountId
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteAccount($accountId)
+    {
+        $account = Account::find($accountId);
+        if ($account) {
+            $account->delete();
+            return redirect()->back()->with('success', 'Account deleted successfully.');
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Account not found.']);
+        }
+    }
+     
 }

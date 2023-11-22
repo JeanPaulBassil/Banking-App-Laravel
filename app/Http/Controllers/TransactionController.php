@@ -24,8 +24,8 @@ class TransactionController extends Controller
         }
 
         $account = Account::where('id', $accountId)->where('user_id', $userId)->first();
-
-        if (!$account) {
+            
+        if (!$account || $account->status === 'Pending') {
             return redirect()->route('dashboard')->withErrors(['error' => 'Account not found or you do not have permission to access this account']);
         }
 
@@ -94,5 +94,4 @@ class TransactionController extends Controller
         }
     }
 
-    // ... Other methods (if any) ...
 }

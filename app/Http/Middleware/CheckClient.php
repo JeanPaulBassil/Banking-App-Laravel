@@ -16,7 +16,7 @@ class CheckClient{
      * @return mixed
      */
 
-    public function checkUser($request, Closure $next){
+    public function handle($request, Closure $next){
         $user_id = Session::get("user_id");
         if(!$user_id){
             return redirect('/login');
@@ -26,6 +26,6 @@ class CheckClient{
         if($user && $user->role == 'client')
             return $next($request);
         
-        return redirect('/');
+        return $next($request);
     }
 }
