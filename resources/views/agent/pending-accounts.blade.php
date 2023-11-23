@@ -11,12 +11,10 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <!-- Back Button -->
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
+                <a href="{{ route('agent.dashboard') }}" class="btn btn-secondary">Back</a>
             </div>
             <h1>Agent Dashboard</h1>
             <div>
-                <!-- Logout Button -->
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-warning">Logout</button>
@@ -46,11 +44,11 @@
                         <td>{{ $account->currency }}</td>
                         <td>{{ $account->status }}</td>
                         <td>
-                            <form action="{{ route('account.accept', $account->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('agent.accept', $account->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-success btn-sm">Accept</button>
                             </form>
-                            <form action="{{ route('account.delete', $account->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('agent.delete', $account->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

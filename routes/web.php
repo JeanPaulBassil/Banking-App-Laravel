@@ -45,3 +45,7 @@ Route::get('agent/accounts', [AgentController::class, 'showClientAccounts']) ->n
 Route::get('agent/pending', [AgentController::class, 'showPendingAccounts'])->name('agent.pending')->middleware(['auth', 'agent']);
 Route::post('agent/accept/{account}', [AgentController::class, 'acceptAccount'])->name('agent.accept')->middleware(['auth', 'agent']);
 Route::delete('agent/delete/{account}', [AgentController::class, 'deleteAccount'])->name('agent.delete')->middleware(['auth', 'agent']);
+Route::post('agent/disable/{account}', [AgentController::class, 'disableAccount'])->name('agent.disable')->middleware(['auth', 'agent']);
+Route::post('agent/enable/{account}', [AgentController::class, 'enableAccount'])->name('agent.enable')->middleware(['auth', 'agent']);
+Route::get('agent/transaction/{account}', [AgentController::class, 'showTransactionForm'])->name('agent.transaction')->middleware(['auth', 'agent']);
+Route::post('agent/transaction/{account}', [AgentController::class, 'performTransaction'])->name('agent.performTransaction')->middleware(['auth', 'agent']);
