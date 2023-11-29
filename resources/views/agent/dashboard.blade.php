@@ -34,6 +34,10 @@
             <h2>Pending Accounts</h2>
             <a href="{{ route('agent.pending') }}" class="btn btn-info">View Pending Accounts</a>
         </div>
+        <div class="mb-4">
+    <h2>Transactions History</h2>
+    <a href="{{ route('agent.transactions') }}" class="btn btn-info">View Transactions</a>
+</div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

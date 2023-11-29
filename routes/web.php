@@ -49,3 +49,4 @@ Route::post('agent/disable/{account}', [AgentController::class, 'disableAccount'
 Route::post('agent/enable/{account}', [AgentController::class, 'enableAccount'])->name('agent.enable')->middleware(['auth', 'agent']);
 Route::get('agent/transaction/{account}', [AgentController::class, 'showTransactionForm'])->name('agent.transaction')->middleware(['auth', 'agent']);
 Route::post('agent/transaction/{account}', [AgentController::class, 'performTransaction'])->name('agent.performTransaction')->middleware(['auth', 'agent']);
+Route::get('agent/transactions', [AgentController::class, 'showTransactions'])->name('agent.transactions')->middleware(['auth', 'agent']);

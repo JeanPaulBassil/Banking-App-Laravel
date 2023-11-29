@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ClientOperation;
 use App\Models\User;
 use App\Models\Account;
-
+use App\Models\Transaction;
 class AgentController extends Controller
 {
 
@@ -56,6 +56,23 @@ class AgentController extends Controller
         $clients = User::where('role', 'client')->with('accounts')->get();
         return view('agent.accounts', ['clients' => $clients]);
     }
+
+     /**
+     * Show all transactions.
+     *
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
+     */
+    public function showTransactions()
+    {
+        $userId = session('user_id');
+        if (!$userId) {
+            return redirect()->route('login')->withErrors(['error' => 'Not authenticated']);
+        }
+
+        $transactions = Transaction::all(); // Fetch all transactions
+        return view('agent.transactionhistory', ['transactions' => $transactions]);
+    }
+
 
     /**
      * Lists all the Pending bank accounts
