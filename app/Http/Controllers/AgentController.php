@@ -57,19 +57,21 @@ class AgentController extends Controller
         return view('agent.accounts', ['clients' => $clients]);
     }
 
-     /**
-     * Show all transactions.
+    /**
+     * Show all transactions with optional filtering.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
-    public function showTransactions()
+    public function showTransactions(Request $request)
     {
-        $userId = session('user_id');
-        if (!$userId) {
-            return redirect()->route('login')->withErrors(['error' => 'Not authenticated']);
+        $query = Transaction::query();
+        
+        if ($request->filled('type') && $request->type !== 'all') {
+            $query->where('type', $request->type);
         }
-
-        $transactions = Transaction::all(); // Fetch all transactions
+    
+        $transactions = $query->get();
         return view('agent.transactionhistory', ['transactions' => $transactions]);
     }
 
