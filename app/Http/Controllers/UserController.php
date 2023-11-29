@@ -7,8 +7,8 @@ use App\Models\User;
 class UserController extends Controller{
     /**
      * Show the App's Dashboard
-     * 
-     * @return \Illuminate\View\View
+     *
+     * @return \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
 
     public function showDashboard(){
