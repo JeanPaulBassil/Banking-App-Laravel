@@ -30,16 +30,22 @@ Route::get('/', [UserController::class, 'showDashboard'])->name('dashboard')->mi
 
 
 // Routes for account creation and management
-Route::get('account/create', [AccountController::class, 'showCreateAccount'])->name('account.create')->middleware('auth')->middleware('client');
-Route::post('account/create', [AccountController::class, 'createAccount'])->name('account.create')->middleware('auth')->middleware('client');
-Route::delete('account/{account}', [AccountController::class,'destroy'])->name('account.destroy')->middleware('auth')->middleware('client');
-Route::get('account/{account}/transfer', [TransactionController::class, 'showTransferForm'])->name('fund.transfer')->middleware('auth')->middleware('client');
+Route::get('account/create', [AccountController::class, 'showCreateAccount'])->name('account.create')->middleware(['auth', 'client']);
+Route::post('account/create', [AccountController::class, 'createAccount'])->name('account.create')->middleware(['auth', 'client']);
+Route::delete('account/{account}', [AccountController::class,'destroy'])->name('account.destroy')->middleware(['auth', 'client']);
+Route::get('account/{account}/transfer', [TransactionController::class, 'showTransferForm'])->name('fund.transfer')->middleware(['auth', 'client']);
 
 // Routes for Transactions and transfers
-Route::post('transaction/execute', [TransactionController::class, 'executeTransfer'])->name('transaction.execute')->middleware('auth')->middleware('client');
+Route::post('transaction/execute', [TransactionController::class, 'executeTransfer'])->name('transaction.execute')->middleware(['auth', 'client']);
 
-//Routes for the Agent dashboard
-Route::get('agent/dashboard', [AgentController::class, 'showDashboard'])->name('agent.dashboard')->middleware('auth')->middleware('agent');
-
-Route::get('agent/operations', [AgentController::class, 'showClientOperations']) ->name('agent.operations')->middleware('auth')->middleware('agent');
-Route::get('agent/accounts', [AgentController::class, 'showClientAccounts']) ->name('agent.accounts')->middleware('auth')->middleware('agent');
+// Routes for the Agent dashboard
+Route::get('agent/dashboard', [AgentController::class, 'showDashboard'])->name('agent.dashboard')->middleware(['auth', 'agent']);
+Route::get('agent/operations', [AgentController::class, 'showClientOperations']) ->name('agent.operations')->middleware(['auth', 'agent']);
+Route::get('agent/accounts', [AgentController::class, 'showClientAccounts']) ->name('agent.accounts')->middleware(['auth', 'agent']);
+Route::get('agent/pending', [AgentController::class, 'showPendingAccounts'])->name('agent.pending')->middleware(['auth', 'agent']);
+Route::post('agent/accept/{account}', [AgentController::class, 'acceptAccount'])->name('agent.accept')->middleware(['auth', 'agent']);
+Route::delete('agent/delete/{account}', [AgentController::class, 'deleteAccount'])->name('agent.delete')->middleware(['auth', 'agent']);
+Route::post('agent/disable/{account}', [AgentController::class, 'disableAccount'])->name('agent.disable')->middleware(['auth', 'agent']);
+Route::post('agent/enable/{account}', [AgentController::class, 'enableAccount'])->name('agent.enable')->middleware(['auth', 'agent']);
+Route::get('agent/transaction/{account}', [AgentController::class, 'showTransactionForm'])->name('agent.transaction')->middleware(['auth', 'agent']);
+Route::post('agent/transaction/{account}', [AgentController::class, 'performTransaction'])->name('agent.performTransaction')->middleware(['auth', 'agent']);

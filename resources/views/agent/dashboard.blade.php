@@ -8,7 +8,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
+    <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Agent Dashboard</h1>
             <form method="POST" action="{{ route('logout') }}">
@@ -27,6 +27,12 @@
         <div class="mb-4">
             <h2>Clients and Their Accounts</h2>
             <a href="{{ route('agent.accounts') }}" class="btn btn-info">View Clients and Accounts</a>
+        </div>
+
+        <!-- List All Pending Accounts -->
+        <div class="mb-4">
+            <h2>Pending Accounts</h2>
+            <a href="{{ route('agent.pending') }}" class="btn btn-info">View Pending Accounts</a>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

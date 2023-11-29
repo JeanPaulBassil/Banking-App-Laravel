@@ -26,6 +26,6 @@ class CheckAgent
         if($user && $user->role == 'agent')
             return $next($request);
         
-        return redirect('/');
+        return $next($request);
     }
 }
