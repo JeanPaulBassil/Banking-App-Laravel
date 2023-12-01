@@ -162,19 +162,42 @@ class AgentController extends Controller
         if (!$account) {
             return redirect()->back()->withErrors(['error' => 'Account not found.']);
         }
-
+    
         $amount = $request->input('amount');
         $transactionType = $request->input('transactionType');
-
+    
         if ($transactionType == 'withdrawal' && $account->balance < $amount) {
             return redirect()->back()->withErrors(['error' => 'Insufficient funds for withdrawal.']);
         }
-
+    
+        $oldBalance = $account->balance;
         $account->balance = ($transactionType == 'deposit')
                             ? $account->balance + $amount
                             : $account->balance - $amount;
         $account->save();
-
+    
+        // Log the transaction in client_operations
+        // Log the transaction in client_operations
+    ClientOperation::create([
+        'user_id' => $account->user_id, // Use the user_id from the account model
+        'operation_type' => ucfirst($transactionType),
+        'operation_details' => sprintf(
+            "Performed %s of amount %s. Old balance: %s, New balance: %s",
+            $transactionType,
+            $amount,
+            $oldBalance,
+            $account->balance
+        )
+    ]);
+    Transaction::create([
+        'account_id' => $accountId,
+        'type' => $transactionType,
+        'amount' => $amount,
+        'currency' => $account->currency, // Assuming currency is a field in the Account model
+        'transaction_date' => now(), // Or use Carbon::now() if you're using the Carbon library
+    ]);
+    
         return redirect()->route('agent.accounts')->with('success', 'Transaction successful.');
+    
     }
 }
