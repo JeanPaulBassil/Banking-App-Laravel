@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Account;
-use App\Models\ClientOperation; // Import the ClientOperation model
+use App\Models\ClientOperation; 
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -85,4 +87,30 @@ class AccountController extends Controller
             return redirect()->back()->withErrors(['error' => 'Account not found or access denied.']);
         }
     }
+
+
+/**
+ * Display the transaction history for the logged-in client.
+ *
+ * @param \Illuminate\Http\Request $request
+ * @return \Illuminate\View\View
+ */
+public function showTransactionHistory(Request $request)
+{
+    $userId = session('user_id');
+    $user = User::find($userId);
+    $accounts = $user->accounts;
+
+    $query = Transaction::whereIn('account_id', $accounts->pluck('id'));
+
+    if ($request->filled('filter') && $request->filter !== 'all') {
+        $query->where('type', $request->filter);
+    }
+
+    $transactions = $query->get();
+
+    return view('user.dashboard', compact('transactions', 'user', 'accounts'));
+}
+
+
 }
