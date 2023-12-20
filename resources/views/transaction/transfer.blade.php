@@ -46,7 +46,8 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Transfer</button>
-            <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
+            <!-- Updated Cancel button with specific route and confirmation dialog -->
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary" onclick="return confirm('Are you sure you want to cancel the transaction?');">Cancel</a>
         </form>
     </div>
 

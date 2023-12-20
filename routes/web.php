@@ -29,11 +29,14 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middle
 Route::get('/', [UserController::class, 'showDashboard'])->name('dashboard')->middleware('auth');
 
 
+
 // Routes for account creation and management
 Route::get('account/create', [AccountController::class, 'showCreateAccount'])->name('account.create')->middleware(['auth', 'client']);
 Route::post('account/create', [AccountController::class, 'createAccount'])->name('account.create')->middleware(['auth', 'client']);
 Route::delete('account/{account}', [AccountController::class,'destroy'])->name('account.destroy')->middleware(['auth', 'client']);
 Route::get('account/{account}/transfer', [TransactionController::class, 'showTransferForm'])->name('fund.transfer')->middleware(['auth', 'client']);
+Route::get('account/transactions', [AccountController::class, 'showTransactionHistory'])->name('account.transactions')->middleware(['auth', 'client']);
+
 
 // Routes for Transactions and transfers
 Route::post('transaction/execute', [TransactionController::class, 'executeTransfer'])->name('transaction.execute')->middleware(['auth', 'client']);
